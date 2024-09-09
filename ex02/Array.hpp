@@ -25,7 +25,8 @@ public:
   Array(Array const &other);
   ~Array();
   Array &operator=(Array const &other);
-  T &operator[](unsigned int i) const;
+  T &operator[](unsigned int i);
+  T const &operator[](unsigned int i) const;
   unsigned int size() const;
 };
 

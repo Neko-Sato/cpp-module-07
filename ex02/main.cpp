@@ -39,6 +39,8 @@ int main(int, char **) {
     for (unsigned int i = 0; i < a.size(); i++)
       std::cout << a[i] << ", ";
     std::cout << std::endl;
+    // Array<std::string> const &b = a;
+    // b[2] = "Error!";
   }
   return 0;
 }

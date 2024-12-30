@@ -6,9 +6,11 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 10:51:28 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/08/25 11:05:01 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/12/30 10:53:44 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "Array.hpp"
 
 #include <cstddef>
 #include <exception>
@@ -18,30 +20,41 @@ template <typename T> Array<T>::Array() : _size(0), _array(NULL) {
 }
 
 template <typename T>
-Array<T>::Array(unsigned int n) : _size(n), _array(new T[n]) {
+Array<T>::Array(unsigned int n)
+    : _size(n), _array(reinterpret_cast<T *>(::operator new[](sizeof(T[n])))) {
+  for (unsigned int i = 0; i < n; i++)
+    new (&_array[i]) T();
 }
 
 template <typename T>
 Array<T>::Array(Array const &other)
-    : _size(other._size), _array(new T[other._size]) {
+    : _size(other._size),
+      _array(reinterpret_cast<T *>(::operator new[](sizeof(T[_size])))) {
   for (unsigned int i = 0; i < _size; i++)
-    _array[i] = other._array[i];
+    new (&_array[i]) T(other._array[i]);
 }
 
 template <typename T> Array<T>::~Array() {
-  delete[] _array;
+  for (unsigned int i = 0; i < _size; i++)
+    _array[i].~T();
+  ::operator delete[](_array);
 }
 
 template <typename T> Array<T> &Array<T>::operator=(Array<T> const &other) {
   if (this != &other) {
-    {
-      T *tmp = new T[other._size];
-      delete[] _array;
-      _array = tmp;
+    if (_size != other._size) {
+      T *tmp = reinterpret_cast<T *>(::operator new[](sizeof(T[other._size])));
+      for (unsigned int i = 0; i < other._size; i++)
+        new (&tmp[i]) T(other._array[i]);
+      for (unsigned int i = 0; i < _size; i++)
+        _array[i].~T();
+      ::operator delete[](_array);
       _size = other._size;
+      _array = tmp;
+    } else {
+      for (unsigned int i = 0; i < _size; i++)
+        _array[i] = other._array[i];
     }
-    for (unsigned int i = 0; i < other._size; i++)
-      _array[i] = other._array[i];
   }
   return *this;
 }

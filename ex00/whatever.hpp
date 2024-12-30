@@ -6,13 +6,15 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 09:55:28 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/12/30 10:57:30 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/12/30 11:31:15 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #ifndef __WHATEVER_HPP__
 #define __WHATEVER_HPP__
+
+#include <cstddef>
 
 template <typename T> void swap(T &a, T &b) {
   T tmp(a);
